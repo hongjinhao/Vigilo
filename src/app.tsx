@@ -47,6 +47,8 @@ export function App() {
     sendTelegramMessage,
     sendStatusResponse,
     setStatusHandler,
+    setSentryOnHandler,
+    setSentryOffHandler,
     botUsername,
     resetTelegramSettings,
   } = useTelegram();
@@ -83,6 +85,14 @@ export function App() {
   useEffect(() => {
     setStatusHandler(handleStatusRequest);
   }, [setStatusHandler, handleStatusRequest]);
+
+  useEffect(() => {
+    setSentryOnHandler(() => setSendTelegrams(true));
+  }, [setSentryOnHandler, setSendTelegrams]);
+
+  useEffect(() => {
+    setSentryOffHandler(() => setSendTelegrams(false));
+  }, [setSentryOffHandler, setSendTelegrams]);
 
   const isAppReady = cameras.length > 0 && telegramBotToken && telegramChatId;
   const isMotionActive = lastMotionTime && (Date.now() - lastMotionTime.getTime()) < MOTION_ACTIVE_DURATION_MS;

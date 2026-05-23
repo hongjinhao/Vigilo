@@ -17,6 +17,8 @@ export function useTelegram() {
   const [hasStatusHandler, setHasStatusHandler] = useState(false);
   const botRef = useRef<Bot | null>(null);
   const onStatusRequestRef = useRef<(() => void) | null>(null);
+  const onSentryOnRef = useRef<(() => void) | null>(null);
+  const onSentryOffRef = useRef<(() => void) | null>(null);
 
   // Persist to localStorage
   useEffect(() => {
@@ -74,11 +76,18 @@ export function useTelegram() {
           console.error("Error with bot polling:", err);
         });
      } else if (hasStatusHandler) {
-       console.log("Registering status command");
-       // Listen for status command when chat ID is set
        bot.command(STATUS_COMMAND, () => {
-         console.log("Status command received");
          onStatusRequestRef.current?.();
+       });
+
+       bot.command("sentry_on", (ctx) => {
+         onSentryOnRef.current?.();
+         ctx.reply("Sentry mode enabled. Motion alerts are on.").catch(() => {});
+       });
+
+       bot.command("sentry_off", (ctx) => {
+         onSentryOffRef.current?.();
+         ctx.reply("Sentry mode disabled. Motion alerts are off.").catch(() => {});
        });
 
       bot.start().catch((err) => {
@@ -227,6 +236,14 @@ export function useTelegram() {
     setHasStatusHandler(true);
   }, []);
 
+  const setSentryOnHandler = useCallback((handler: () => void) => {
+    onSentryOnRef.current = handler;
+  }, []);
+
+  const setSentryOffHandler = useCallback((handler: () => void) => {
+    onSentryOffRef.current = handler;
+  }, []);
+
   const resetTelegramSettings = useCallback(() => {
     // Send off message before resetting
     if (telegramBotToken && telegramChatId) {
@@ -264,6 +281,8 @@ export function useTelegram() {
     sendStatusResponse,
     sendMessage,
     setStatusHandler,
+    setSentryOnHandler,
+    setSentryOffHandler,
     botUsername,
     resetTelegramSettings,
   };
