@@ -7,7 +7,7 @@ export const DEFAULT_MOTION_PIXEL_RATIO = 0.01;
 export const DEFAULT_INTERVAL_MS = 200;
 
 // Telegram defaults
-export const DEFAULT_DEBOUNCE_TIME_MS = 5000;
+export const DEFAULT_DEBOUNCE_TIME_MS = 500;
 
 // Motion detection messages
 export const MOTION_DETECTED_MESSAGE_PREFIX = "Movement detected at";
