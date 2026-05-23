@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "preact/hooks";
 import { Bot } from "grammy";
 import { dataUrlToBlob } from "../lib/utils";
-import { MOTION_DETECTED_MESSAGE_PREFIX, STATUS_COMMAND, STATUS_RESPONSE_PREFIX, STATUS_TIMESTAMP_PREFIX } from "../lib/constants";
+import { MOTION_DETECTED_MESSAGE_PREFIX, STATUS_COMMAND, STATUS_RESPONSE_PREFIX, STATUS_TIMESTAMP_PREFIX, DEFAULT_DEBOUNCE_TIME_MS } from "../lib/constants";
 
 export function useTelegram() {
   const [telegramBotToken, setTelegramBotToken] = useState(() => {
@@ -12,7 +12,7 @@ export function useTelegram() {
     return stored ? Number(stored) : 0;
   });
   const [sendTelegrams, setSendTelegrams] = useState(false);
-  const [debounceTime, setDebounceTime] = useState(5000);
+  const [debounceTime, setDebounceTime] = useState(DEFAULT_DEBOUNCE_TIME_MS);
   const [botUsername, setBotUsername] = useState("");
   const [hasStatusHandler, setHasStatusHandler] = useState(false);
   const botRef = useRef<Bot | null>(null);
